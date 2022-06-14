@@ -28,10 +28,6 @@
             android:value="AIzaSyBzYtbV-ld_M_n02HN3AE6-WHi7-HwJ2kI"/>
 
         <service
-            android:name=".ui.audio.AudioService"
-            android:enabled="true"
-            android:exported="true" />
-        <service
             android:name=".ui.player.PlayerService"
             android:enabled="true"
             android:exported="true" />

@@ -87,7 +87,7 @@
     </fragment>
     <fragment
         android:id="@+id/fragment_audio"
-        android:name="ru.mirea.osin.mireaproject.ui.audio.FragmentAudio"
+        android:name="ru.mirea.osin.mireaproject.ui.audio.Dictaphone"
         android:label="Dictaphone"
         tools:layout="@layout/fragment_audio" />
     <fragment
