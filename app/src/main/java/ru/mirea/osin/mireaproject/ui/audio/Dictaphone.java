@@ -61,12 +61,13 @@ public class Dictaphone extends Fragment {
     private String mParam1;
     private String mParam2;
     private static final int REQUEST_CODE_PERMISSION = 100;
-    private boolean isWork=false;
+    private boolean isWork = false;
     private String[] PERMISSIONS = {
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
             RECORD_AUDIO
     };
     private File file;
+
     public static Dictaphone newInstance(String param1, String param2) {
         Dictaphone fragment = new Dictaphone();
         Bundle args = new Bundle();
@@ -75,6 +76,7 @@ public class Dictaphone extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,6 +86,7 @@ public class Dictaphone extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
+
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
@@ -102,7 +105,7 @@ public class Dictaphone extends Fragment {
             isWork = true;
         } else {
             // Выполняется запрос к пользователь на получение необходимых разрешений
-            ActivityCompat.requestPermissions(getActivity(), new String[] {RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE},
+            ActivityCompat.requestPermissions(getActivity(), new String[]{RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE},
                     REQUEST_CODE_PERMISSION);
         }
         linearLayoutRecorder = (LinearLayout) v.findViewById(R.id.linearLayoutRecorder);
@@ -121,39 +124,48 @@ public class Dictaphone extends Fragment {
         imageViewRecord.setOnClickListener(new View.OnClickListener() {
 
             @Override
-            public void onClick(View v) { if( v == imageViewRecord ){
-                try {
-                    prepareforRecording();
-                    startRecording();
-                }
-                catch (Exception e) { Toast.makeText(getActivity(), "Eror",
-                        Toast.LENGTH_SHORT).show();}
+            public void onClick(View v) {
+                if (v == imageViewRecord) {
+                    try {
+                        prepareforRecording();
+                        startRecording();
+                    } catch (Exception e) {
+                        Toast.makeText(getActivity(), "Ошибка",
+                                Toast.LENGTH_SHORT).show();
+                    }
 
-            }}  });
+                }
+            }
+        });
         imageViewStop.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {if( v == imageViewStop ){
-                prepareforStop();
-                stopRecording();
-                processAudioFile();
-            }}  });
+            public void onClick(View v) {
+                if (v == imageViewStop) {
+                    prepareforStop();
+                    stopRecording();
+                    processAudioFile();
+                }
+            }
+        });
         imageViewPlay.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {if( v == imageViewPlay ){
-                if( !isPlaying && fileName != null ){
-                    isPlaying = true;
-                    // getActivity().startService(new Intent(getActivity(),DictaphoneService.class));
-                    startPlaying();
-                }else{
-                    isPlaying = false;
-                    // getActivity().stopService(new Intent(getActivity(),DictaphoneService.class));
-                    stopPlaying();
-                }}  }});
+            public void onClick(View v) {
+                if (v == imageViewPlay) {
+                    if (!isPlaying && fileName != null) {
+                        isPlaying = true;
+                        // getActivity().startService(new Intent(getActivity(),DictaphoneService.class));
+                        startPlaying();
+                    } else {
+                        isPlaying = false;
+                        // getActivity().stopService(new Intent(getActivity(),DictaphoneService.class));
+                        stopPlaying();
+                    }
+                }
+            }
+        });
 
         return v;
     }
-
-
 
 
     // Callback with the request from calling requestPermissions(...)
@@ -167,6 +179,7 @@ public class Dictaphone extends Fragment {
                     && grantResults[0] == PackageManager.PERMISSION_GRANTED;
         }
     }
+
     public static boolean hasPermissions(Context context, String... permissions) {
         if (context != null && permissions != null) {
             for (String permission : permissions) {
@@ -194,12 +207,14 @@ public class Dictaphone extends Fragment {
         Toast.makeText(getActivity(), "This is a progress!",
                 Toast.LENGTH_SHORT).show();
     }
+
     private void prepareforRecording() {
         TransitionManager.beginDelayedTransition(linearLayoutRecorder);
         imageViewRecord.setVisibility(View.GONE);
         imageViewStop.setVisibility(View.VISIBLE);
         linearLayoutPlay.setVisibility(View.GONE);
     }
+
     private void startPlaying() {
 
         mPlayer = new MediaPlayer();
@@ -234,7 +249,7 @@ public class Dictaphone extends Fragment {
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                if( mPlayer!=null && fromUser ){
+                if (mPlayer != null && fromUser) {
                     //here the track's progress is being changed as per the progress bar
                     mPlayer.seekTo(progress);
                     //timer is being updated as per the progress of the seekbar
@@ -263,8 +278,8 @@ public class Dictaphone extends Fragment {
     };
 
     private void seekUpdation() {
-        if(mPlayer != null){
-            int mCurrentPosition = mPlayer.getCurrentPosition() ;
+        if (mPlayer != null) {
+            int mCurrentPosition = mPlayer.getCurrentPosition();
             seekBar.setProgress(mCurrentPosition);
             lastProgress = mCurrentPosition;
         }
@@ -289,7 +304,7 @@ public class Dictaphone extends Fragment {
 
         fileName = root.getAbsolutePath() + "/VoiceRecorderSimplifiedCoding/Audios/" +
                 System.currentTimeMillis() + ".mp3";
-        Log.d("filename",fileName);
+        Log.d("filename", fileName);
         mRecorder.setOutputFile(fileName);
 
 
@@ -306,6 +321,7 @@ public class Dictaphone extends Fragment {
         chronometer.setBase(SystemClock.elapsedRealtime());
         chronometer.start();
     }
+
     private void prepareforStop() {
         TransitionManager.beginDelayedTransition(linearLayoutRecorder);
         imageViewRecord.setVisibility(View.VISIBLE);
@@ -315,10 +331,10 @@ public class Dictaphone extends Fragment {
 
     private void stopRecording() {
 
-        try{
+        try {
             mRecorder.stop();
             mRecorder.release();
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         mRecorder = null;
@@ -330,12 +346,11 @@ public class Dictaphone extends Fragment {
     }
 
 
-
     private void stopPlaying() {
 
-        try{
+        try {
             mPlayer.release();
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         mPlayer = null;
